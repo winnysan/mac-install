@@ -137,7 +137,7 @@ sudo nano /etc/hosts
 
 ### nastavenie HTTPS
 
-súbor `openssl-san.cnf`
+konfiguračný súbor `openssl-san.cnf` na generovanie certifikátov s podporou rozšírenia SAN - `Subject Alternative Name`
 
 ```
 [req]
@@ -158,6 +158,8 @@ DNS.1 = local.com
 DNS.2 = local.sk
 ```
 
+popis: `[req]` základné paramentre žiadosti o certifikát, `DN` definuje hlavnú doménu CN - Common Name, `[req_ext]` definuje rozšírenia certifikátu subjectAltName, `[alt_names]` definuje alternatívne názvy domén alebo subdomén
+
 vytvorenie samo-podpísaného certifikátu
 
 ```
@@ -173,6 +175,8 @@ pridať `local.crt` do `Kľúčenka` pre Systém a nastaviť `Vždy dôverovať`
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain local.crt
 ```
 
+popis: `-d -r trustRoot` nastaví ako doveryhodný certifikát pre všetky účty, uloží do systémovej kľúčenky
+
 overenie
 
 ```
@@ -185,7 +189,7 @@ vymazať DNS cache
 sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
 ```
 
-skopirovanie do `nginx`
+skopirovanie do `nginx`, nastavenie oprávnení (plný prístup pre len pre vlastníka, nastavenie vlastníka ako `root`, skupiny ako `wheel`, ktorá je predvolená pre administračné účely, čím sa zabezpečí že adresár je riadený len administrátorom systému)
 
 ```
 sudo mkdir -p /opt/homebrew/etc/nginx/certs
