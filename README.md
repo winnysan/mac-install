@@ -141,24 +141,26 @@ konfiguračný súbor `openssl-san.cnf` na generovanie certifikátov s podporou 
 
 ```
 [req]
-default_bits       = 2048
-prompt             = no
-default_md         = sha256
-distinguished_name = dn
-req_extensions     = req_ext
+default_bits       = 2048    # Nastavuje veľkosť RSA kľúča na 2048 bitov
+default_md         = sha256  # Používa SHA-256 ako hashovaciu funkciu na podpis certifikátu
+distinguished_name = dn      # Odkazuje na sekciu [dn], kde sú uvedené údaje o organizácii
+x509_extensions    = v3_req  # Odkazuje na sekciu [v3_req], ktorá definuje rozšírenia pre certifikát (vrátane SAN)
+prompt             = no      # Zabezpečuje, že OpenSSL nebude interaktívne pýtať údaje, ale použije hodnoty z konfigurácie
 
 [dn]
-CN = local.com
+C  = SK           # Krajina
+ST = Bratislava   # Štát/kraj
+L  = Bratislava   # Mesto
+O  = MyLocal      # Organizácia (napr. názov projektu)
+CN = mylocal.com  # Common Name (CN) – hlavná doména pre SSL certifikát
 
-[req_ext]
-subjectAltName = @alt_names
+[v3_req]
+subjectAltName = @alt_names  # Odkazuje na sekciu [alt_names], kde sú definované alternatívne domény
 
 [alt_names]
 DNS.1 = local.com
 DNS.2 = local.sk
 ```
-
-popis: `[req]` základné paramentre žiadosti o certifikát, `DN` definuje hlavnú doménu CN - Common Name, `[req_ext]` definuje rozšírenia certifikátu subjectAltName, `[alt_names]` definuje alternatívne názvy domén alebo subdomén
 
 vytvorenie samo-podpísaného certifikátu
 
